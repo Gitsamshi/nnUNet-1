@@ -187,6 +187,7 @@ class ImageCropper(object):
         :param output_folder:
         :return:
         """
+        # run self.load_crop_save
         if output_folder is not None:
             self.output_folder = output_folder
 
