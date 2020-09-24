@@ -21,6 +21,7 @@ seg_metrics['Name'] = list()
 
 if num_labels == 1:
     seg_metrics['LesionDSC'] = list()
+    seg_metrics['LesionIOU'] = list()
     seg_metrics['LesionNSD-3mm'] = list()
 
 elif num_labels == 2:
