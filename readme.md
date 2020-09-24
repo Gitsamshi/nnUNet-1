@@ -1,5 +1,47 @@
 # nnU-Net
 
+### Updated Sept 24
+
+#### How to train 20 CT COVID Segmentation Dataset
+
+1 Follow the [Installation](#installation) guide for nnUNet.
+
+2 Set environment variable path for $nnUnet_raw_data_base, $nnUnet_preprocess and $RESULTS_FOLDER, which represent data storage place with raw/preprocess/output for the data.
+
+3 Run preprocess_file.py for get the input for the dataset.
+
+4 Generate preprocess and plan files, the output will be stored in $nnUnet_preprocess path
+
+```python
+nnUNet_plan_and_preprocess -t 102 --verify_dataset_integrity
+```
+
+5 Run 2D UNet
+
+```
+nnUNet_train 2d nnUNetTrainerV2 102 0
+```
+
+where 102 means task name, 0 means folder 0 (Automatic 4:1 train/test split). Or train 3D UNet
+
+```
+nnUNet_train 3d_cascade_fullres nnUNetTrainerV2CascadeFullRes 102 0
+```
+
+The trained models will be stored in $RESULTS_FOLDER path.
+
+6 Predict
+
+```
+nnUNet_predict -i INPUT_FOLDER -o OUTPUT_FOLDER -t 102 -m 2d --save_npz
+```
+
+7 Run COVID-19-Seg-Evaluation.py for evaluation (IOU, DICE, SURFACE_DICE)
+
+----------------------------------------------------------------------
+
+### Original
+
 In 3D biomedical image segmentation, dataset properties like imaging modality, image sizes, voxel spacings, class 
 ratios etc vary drastically.
 For example, images in the [Liver and Liver Tumor Segmentation Challenge dataset](https://competitions.codalab.org/competitions/17094) 
@@ -209,7 +251,7 @@ TASK_NAME_OR_ID specifies what dataset should be trained on and FOLD specifies w
 nnU-Net stores a checkpoint every 50 epochs. If you need to continue a previous training, just add a `-c` to the 
 training command.
 
- 
+
 #### 2D U-Net
 For FOLD in [0, 1, 2, 3, 4], run:
 ```bash
@@ -472,10 +514,10 @@ You do not have to run five-fold cross-validation all the time. If you want to t
  *all* for `FOLD` instead of a number. Note that this will then not give you an estimate of your performance on the 
  training set. You will also no tbe able to automatically identify which ensembling should be used and nnU-Net will 
  not be able to configure a postprocessing. 
- 
+
 CAREFUL: DO NOT use fold=all when you intend to run the cascade! You must run the cross-validation in 3d_lowres so 
 that you get proper (=not overfitted) low resolution predictions.
- 
+
 #### Sharing Models
 You can share trained models by simply sending the corresponding output folder from `RESULTS_FOLDER/nnUNet` to 
 whoever you want share them with. The recipient can then use nnU-Net for inference with this model.

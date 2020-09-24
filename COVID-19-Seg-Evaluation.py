@@ -3,7 +3,7 @@ import nibabel as nb
 import os
 from collections import OrderedDict
 import pandas as pd
-from SurfaceDice import compute_surface_distances, compute_surface_dice_at_tolerance, compute_dice_coefficient
+from SurfaceDice import compute_surface_distances, compute_surface_dice_at_tolerance, compute_dice_coefficient, compute_iou_coefficient
 
 join = os.path.join
 
@@ -53,6 +53,7 @@ for name in filenames:
     if num_labels == 1:  # Lesion
         surface_distances = compute_surface_distances(gt_data == 1, seg_data == 1, case_spacing)
         seg_metrics['LesionDSC'].append(compute_dice_coefficient(gt_data == 1, seg_data == 1))
+        seg_metrics['LesionIOU'].append(compute_iou_coefficient(gt_data == 1, seg_data == 1))
         seg_metrics['LesionNSD-3mm'].append(compute_surface_dice_at_tolerance(surface_distances, 3))
 
     elif num_labels == 2:  # left and right lung

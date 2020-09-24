@@ -495,6 +495,13 @@ def compute_dice_coefficient(mask_gt, mask_pred):
     return 2 * volume_intersect / volume_sum
 
 
+def compute_iou_coefficient(mask_gt, mask_pred):
+    smooth = 1e-5
+    intersection = (mask_gt & mask_pred).sum()
+    union = (mask_gt | mask_pred).sum()
+    return (intersection + smooth) / (union + smooth)
+
+
 # %% Some Simple Tests
 # single pixels, 2mm away
 mask_gt = np.zeros((128, 128, 128), np.uint8)
